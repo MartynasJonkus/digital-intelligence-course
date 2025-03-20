@@ -1,7 +1,7 @@
 import csv
 import random
 
-def process_breast_cancer_data(input_file, output_file):
+def prepare_data(input_file):
     # Read and process data
     processed_rows = []
     
@@ -43,10 +43,4 @@ def process_breast_cancer_data(input_file, output_file):
     # Shuffle the processed data
     random.shuffle(processed_rows)
     
-    # Write to output file
-    with open(output_file, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerows(processed_rows)
-
-# Usage example
-process_breast_cancer_data('breast-cancer-wisconsin.data', 'processed_data.csv')
+    return processed_rows
