@@ -74,31 +74,27 @@ def batch_gradient(loss_type, data_rows, weights, learning_rate, epoch_count, ta
 
             if loss_type == 'cross_entropy':
                 for i, x in enumerate(features):
-                    weights[i] -= learning_rate * (y - class_label) * x
+                    gradients[i] += (y - class_label) * x
 
-                mean_error += -np.log(y + 1e-8) if class_label == 1 else -np.log(1 - y + 1e-8)
+                total_error += -np.log(y + 1e-8) if class_label == 1 else -np.log(1 - y + 1e-8)
 
             elif loss_type == 'mean_squared':
                 for i, x in enumerate(features):
-                    weights[i] -= learning_rate * (y - class_label) * y * (1 - y) * x
+                    gradients[i] += (y - class_label) * y * (1 - y) * x
 
-                mean_error += 0.5 * (class_label - y) ** 2
-
-            # Update weights
-            for i, x in enumerate(features):
-                gradient_sum[i] += (y - class_label) * y * (1 - y) * x
-
-            total_loss += (class_label - y) ** 2
+                total_error += 0.5 * (class_label - y) ** 2    
         
+        # Update weights
         for i in range(len(weights)):
-            weights[i] -= learning_rate * gradient_sum[i] / len(data_rows)
+            weights[i] -= learning_rate * gradients[i] / len(data_rows)
 
         # Store stats
-        mean_error /= len(data_rows)
+        total_error /= len(data_rows)
         accuracy = total_correct / len(data_rows)
-        error_history.append(mean_error)
+        error_history.append(total_error)
         accuracy_history.append(accuracy)
 
         epoch += 1
-        print(f"Epoch {epoch}: Loss={mean_error:.4f}, Acc={accuracy:.4f}")
-    return weights
+        print(f"Epoch {epoch}: Loss={total_error:.4f}, Acc={accuracy:.4f}")
+
+    return weights, error_history, accuracy_history
