@@ -1,4 +1,3 @@
-import csv
 import random
 
 def prepare_data(input_file):
