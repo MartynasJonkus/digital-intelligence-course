@@ -11,12 +11,14 @@ def learning_rate_experiment(data_train, data_val, learning_rates, is_stochastic
         'val_loss': [],
         'train_acc': [],
         'val_acc': [],
-        'histories': []
+        'histories': [],
+        'time': [],
+        'epoch_count': []
     }
     
     for lr in tqdm(learning_rates, desc="Testing LRs"):
         if is_stochastic:
-            weights, epoch, time_to_train, error_history, accuracy_history, val_error_history, val_accuracy_history = stochastic_gradient(
+            weights, epoch_count, time_to_train, error_history, accuracy_history, val_error_history, val_accuracy_history = stochastic_gradient(
                 training_data=data_train,
                 learning_rate=lr,
                 epoch_count=1000,
@@ -24,7 +26,7 @@ def learning_rate_experiment(data_train, data_val, learning_rates, is_stochastic
                 validation_data=data_val
             )
         else:
-            weights, epoch, time_to_train, error_history, accuracy_history, val_error_history, val_accuracy_history = batch_gradient(
+            weights, epoch_count, time_to_train, error_history, accuracy_history, val_error_history, val_accuracy_history = batch_gradient(
                 training_data=data_train,
                 learning_rate=lr,
                 epoch_count=1000,
@@ -38,6 +40,8 @@ def learning_rate_experiment(data_train, data_val, learning_rates, is_stochastic
         results['train_acc'].append(accuracy_history[-1])
         results['val_acc'].append(val_accuracy_history[-1])
         results['histories'].append((error_history, val_error_history, accuracy_history, val_accuracy_history))
+        results['time'].append(time_to_train)
+        results['epoch_count'].append(epoch_count)
     
     return results
 
@@ -103,7 +107,6 @@ def plot_lr_impact(results):
     plt.tight_layout()
     plt.show()
 
-
 data_rows = prepare_data('breast-cancer-wisconsin.data')
 
 training_data = data_rows[:round(len(data_rows) * 0.8)]
@@ -112,6 +115,7 @@ testing_data = data_rows[round(len(data_rows) * 0.9):]
 
 # Example usage
 learning_rates = [0.0001, 0.001, 0.01, 0.1, 0.2, 0.5, 1.0]
+
 
 # For Stochastic GD
 stochastic_results = learning_rate_experiment(
