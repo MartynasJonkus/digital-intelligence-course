@@ -22,7 +22,7 @@ testing_data = data_rows[round(len(data_rows) * 0.9):]
     training_data=training_data,
     learning_rate=0.01,
     epoch_count=1000,
-    target_error_value=0.1,
+    target_error_value=0.01,
     validation_data=validation_data
 )
 test_stochastic_err, test_stochastic_acc = evaluate_model(testing_data, stochastic_weights, output_file='stochastic_testing.xlsx')
@@ -39,7 +39,7 @@ test_stochastic_err, test_stochastic_acc = evaluate_model(testing_data, stochast
     training_data=training_data,
     learning_rate=0.5,
     epoch_count=1000,
-    target_error_value=0.1,
+    target_error_value=0.01,
     validation_data=validation_data
 )
 test_batch_err, test_batch_acc = evaluate_model(testing_data, batch_weights, output_file='batch_testing.xlsx')
